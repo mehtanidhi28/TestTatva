@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.testtatva.R
 import com.example.testtatva.databinding.ActivityGridBinding
@@ -61,8 +62,14 @@ class GridActivity : AppCompatActivity() {
                         //if square root is found then check value and create grid
                         val rootValue = sqrt(enteredDigit.toDouble())
                         Log.d("TAG:", "Value: $rootValue")
+                        for (i in 0 until enteredDigit.toInt()) {
+                            randomIndexList.add(i)
+                        }
                         gridView.apply {
                             layoutManager = GridLayoutManager(mActivity, rootValue.toInt())
+                            itemAnimator = null
+                            val verticalDecorator = DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL)
+                            val horizontalDecorator = DividerItemDecoration(mActivity, DividerItemDecoration.HORIZONTAL)
                             mAdapter = GridAdapter(rootValue.toInt()) { position ->
                                 Log.d("TAG:", "POSITION: $position")
                                 clickedIndexCount += 1
@@ -70,14 +77,18 @@ class GridActivity : AppCompatActivity() {
                                     txtWon.visibility = View.VISIBLE
                                 } else {
                                     txtWon.visibility = View.GONE
-                                    mAdapter?.enableTile(getNextRandom())
+                                    val nextRandom = randomIndexList.random()
+                                    randomIndexList.remove(nextRandom)
+                                    mAdapter?.enableTile(nextRandom)
                                 }
                             }
+                            addItemDecoration(verticalDecorator)
+                            addItemDecoration(horizontalDecorator)
                             adapter = mAdapter
                             randomIndex = Random.nextInt(0, enteredDigit.toInt())
                             Log.d("TAG:", "randomIndex: $randomIndex")
                             Handler(Looper.getMainLooper()).postDelayed({
-                                randomIndexList.add(randomIndex)
+                                randomIndexList.remove(randomIndex)
                                 mAdapter?.enableTile(randomIndex)
                             }, 3000)
                         }
@@ -88,21 +99,6 @@ class GridActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    private fun getNextRandom(): Int {
-        val nextRandom = Random.nextInt(0, mBinding.edtValue.text.toString().trim().toInt())
-        randomIndexList.any {
-            it == nextRandom
-        }.let {
-            if (it) {
-                getNextRandom()
-            } else {
-                randomIndexList.add(nextRandom)
-            }
-            return@let
-        }
-        return nextRandom
     }
 
     private fun checkSquareRoot(value: Int): Boolean {

@@ -57,7 +57,7 @@ class GridAdapter(private val gridSize: Int, private val listener: (Int) -> Unit
             )
             isClickable = true
         }
-        notifyDataSetChanged()
+        notifyItemChanged(index)
     }
 
     override fun getItemCount(): Int = gridSize * gridSize
