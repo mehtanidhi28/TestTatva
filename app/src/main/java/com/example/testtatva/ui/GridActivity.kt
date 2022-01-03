@@ -3,6 +3,8 @@ package com.example.testtatva.ui
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -35,6 +37,21 @@ class GridActivity : AppCompatActivity() {
     private fun init() {
         mBinding.apply {
             btnSubmit.setOnClickListener {
+                edtValue.addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+                    }
+
+                    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                        clickedIndexCount = 0
+                        randomIndexList.clear()
+                        txtWon.visibility = View.GONE
+                    }
+
+                    override fun afterTextChanged(p0: Editable?) {
+
+                    }
+                })
                 if (edtValue.text.toString().trim().isEmpty()) {
                     Toast.makeText(mActivity, R.string.validation_text, Toast.LENGTH_SHORT).show()
                 } else {
@@ -53,11 +70,7 @@ class GridActivity : AppCompatActivity() {
                                     txtWon.visibility = View.VISIBLE
                                 } else {
                                     txtWon.visibility = View.GONE
-                                    if (randomIndexList.contains(randomIndex)) {
-
-                                    } else {
-                                        mAdapter?.enableTile(randomIndex)
-                                    }
+                                    mAdapter?.enableTile(getNextRandom())
                                 }
                             }
                             adapter = mAdapter
@@ -75,6 +88,21 @@ class GridActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun getNextRandom(): Int {
+        val nextRandom = Random.nextInt(0, mBinding.edtValue.text.toString().trim().toInt())
+        randomIndexList.any {
+            it == nextRandom
+        }.let {
+            if (it) {
+                getNextRandom()
+            } else {
+                randomIndexList.add(nextRandom)
+            }
+            return@let
+        }
+        return nextRandom
     }
 
     private fun checkSquareRoot(value: Int): Boolean {
