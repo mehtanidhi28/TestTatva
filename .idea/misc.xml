@@ -4,8 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/WorkSpace/Demo/TestTatva/app/src/main/res/layout/activity_grid.xml" value="0.228125" />
+        <entry key="..\:/WorkSpace/Demo/TestTatva/app/src/main/res/layout/activity_list.xml" value="0.228125" />
         <entry key="..\:/WorkSpace/Demo/TestTatva/app/src/main/res/layout/activity_main.xml" value="0.2421875" />
         <entry key="..\:/WorkSpace/Demo/TestTatva/app/src/main/res/layout/item_grid.xml" value="0.2421875" />
+        <entry key="..\:/WorkSpace/Demo/TestTatva/app/src/main/res/layout/item_user_list.xml" value="0.2421875" />
       </map>
     </option>
   </component>
