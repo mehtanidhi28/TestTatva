@@ -17,6 +17,7 @@ class GridAdapter(private val gridSize: Int, private val listener: (Int) -> Unit
     private var button: MaterialButton? = null
     private var context: Context? = null
     private var viewList = ArrayList<MaterialButton>()
+    private var currentIndex = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GridHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_grid, parent, false)
@@ -29,31 +30,32 @@ class GridAdapter(private val gridSize: Int, private val listener: (Int) -> Unit
             context = button?.context
             viewList.add(button as MaterialButton)
             button?.setOnClickListener {
-                listener.invoke(position)
-                it.apply {
-                    setBackgroundColor(
-                        ContextCompat.getColor(
-                            context!!,
-                            android.R.color.holo_blue_light
+                if (currentIndex == position) {
+                    listener.invoke(position)
+                    it.apply {
+                        setBackgroundColor(
+                            ContextCompat.getColor(
+                                context!!,
+                                android.R.color.holo_blue_light
+                            )
                         )
-                    )
-                    isClickable = false
+                        isClickable = false
+                    }
                 }
             }
         }
     }
 
-    fun enableTile() {
-        viewList.onEach {
-            it.apply {
-                setBackgroundColor(
-                    ContextCompat.getColor(
-                        context!!,
-                        android.R.color.holo_red_light
-                    )
+    fun enableTile(index: Int) {
+        currentIndex = index
+        viewList[index].apply {
+            setBackgroundColor(
+                ContextCompat.getColor(
+                    context!!,
+                    android.R.color.holo_red_light
                 )
-                isClickable = true
-            }
+            )
+            isClickable = true
         }
         notifyDataSetChanged()
     }

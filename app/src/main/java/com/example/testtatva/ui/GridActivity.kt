@@ -23,6 +23,8 @@ class GridActivity : AppCompatActivity() {
     }
     private var mAdapter: GridAdapter? = null
     private var clickedIndexCount: Int = 0
+    private var randomIndexList = ArrayList<Int>()
+    private var randomIndex: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,18 +49,24 @@ class GridActivity : AppCompatActivity() {
                             mAdapter = GridAdapter(rootValue.toInt()) { position ->
                                 Log.d("TAG:", "POSITION: $position")
                                 clickedIndexCount += 1
-                                txtWon.visibility = if (clickedIndexCount == enteredDigit.toInt()) {
-                                    View.VISIBLE
+                                if (clickedIndexCount == enteredDigit.toInt()) {
+                                    txtWon.visibility = View.VISIBLE
                                 } else {
-                                    View.GONE
+                                    txtWon.visibility = View.GONE
+                                    if (randomIndexList.contains(randomIndex)) {
+
+                                    } else {
+                                        mAdapter?.enableTile(randomIndex)
+                                    }
                                 }
                             }
                             adapter = mAdapter
-                            val randomDelay = Random.nextLong(0, 10)
-                            Log.d("TAG:", "DELAY: $randomDelay")
+                            randomIndex = Random.nextInt(0, enteredDigit.toInt())
+                            Log.d("TAG:", "randomIndex: $randomIndex")
                             Handler(Looper.getMainLooper()).postDelayed({
-                                mAdapter?.enableTile()
-                            }, randomDelay)
+                                randomIndexList.add(randomIndex)
+                                mAdapter?.enableTile(randomIndex)
+                            }, 3000)
                         }
                     } else {
                         Toast.makeText(mActivity, R.string.not_valid_number, Toast.LENGTH_SHORT)
