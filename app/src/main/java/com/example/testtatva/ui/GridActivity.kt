@@ -1,14 +1,18 @@
 package com.example.testtatva.ui
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.testtatva.R
 import com.example.testtatva.databinding.ActivityGridBinding
 import kotlin.math.floor
 import kotlin.math.sqrt
+import kotlin.random.Random
 
 class GridActivity : AppCompatActivity() {
 
@@ -16,7 +20,7 @@ class GridActivity : AppCompatActivity() {
     private val mActivity by lazy {
         this@GridActivity
     }
-    private var enteredDigit :String =""
+    private var mAdapter: GridAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +40,18 @@ class GridActivity : AppCompatActivity() {
                         //if square root is found then check value and create grid
                         val rootValue = sqrt(enteredDigit.toDouble())
                         Log.d("TAG:", "Value: $rootValue")
+                        gridView.apply {
+                            layoutManager = GridLayoutManager(mActivity, rootValue.toInt())
+                            mAdapter = GridAdapter(rootValue.toInt()) { position ->
+                                Log.d("TAG:", "POSITION: $position")
+                            }
+                            adapter = mAdapter
+                            val randomDelay = Random.nextLong(0, 10)
+                            Log.d("TAG:", "DELAY: $randomDelay")
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                mAdapter?.enableTile(mAdapter?.itemCount)
+                            }, randomDelay)
+                        }
                     } else {
                         Toast.makeText(mActivity, R.string.not_valid_number, Toast.LENGTH_SHORT)
                             .show()
