@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -21,6 +22,7 @@ class GridActivity : AppCompatActivity() {
         this@GridActivity
     }
     private var mAdapter: GridAdapter? = null
+    private var clickedIndexCount: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,12 +46,18 @@ class GridActivity : AppCompatActivity() {
                             layoutManager = GridLayoutManager(mActivity, rootValue.toInt())
                             mAdapter = GridAdapter(rootValue.toInt()) { position ->
                                 Log.d("TAG:", "POSITION: $position")
+                                clickedIndexCount += 1
+                                txtWon.visibility = if (clickedIndexCount == enteredDigit.toInt()) {
+                                    View.VISIBLE
+                                } else {
+                                    View.GONE
+                                }
                             }
                             adapter = mAdapter
                             val randomDelay = Random.nextLong(0, 10)
                             Log.d("TAG:", "DELAY: $randomDelay")
                             Handler(Looper.getMainLooper()).postDelayed({
-                                mAdapter?.enableTile(mAdapter?.itemCount)
+                                mAdapter?.enableTile()
                             }, randomDelay)
                         }
                     } else {

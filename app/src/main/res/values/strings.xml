@@ -6,4 +6,5 @@
     <string name="enter_value">Enter Value</string>
     <string name="validation_text">Please enter value</string>
     <string name="not_valid_number">Not a valid number</string>
+    <string name="won_game">You Won the Game!!</string>
 </resources>
